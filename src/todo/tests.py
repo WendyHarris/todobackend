@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse 
+from django.urls import reverse 
 from rest_framework import status
 from rest_framework.test import APITestCase
 from todo.models import TodoItem 
@@ -73,5 +73,12 @@ class TestDeleteAllItems(APITestCase):
     def setUp(self):
         createItem(self.client)
         createItem(self.client)
-        self.assertEqual(TodoItem.objects)
+        self.assertEqual(TodoItem.objects.count(), 2)
+        self.response = self.client.delete(reverse('todoitem-list'))
+
+    def test_received_204_created_status_code(self):
+        self.assertEqual(self.response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_all_item_were_deleted(self):
+        self.assertEqual(TodoItem.objects.count(), 0)
     
