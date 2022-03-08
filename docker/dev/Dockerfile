@@ -1,0 +1,23 @@
+FROM wendyharris/todobackend-base:latest
+
+#Install dev/build dependencies 
+RUN apt-get update && \ 
+    apt-get install -qy python-dev 
+
+#Activate virtual environment and install wheel support 
+RUN . /appenv/bin/activate && \
+    pip install wheel --upgrade
+
+#PIP environment variables(Install after wheel) 
+ENV WHEELHOUSE=/wheelhouse PIP_WHEEL_DIR=/wheelhouse PIP_FIND_LINKS=/wheelhouse XDG_CACHE_HOME=/XDG_CACHE_HOME
+
+#OUTPUT: Build artifacts (Wheels) are output here 
+VOLUME /wheelhouse
+
+#OUTPUT: Test reports are output here 
+VOLUME /reports 
+
+#Add test entrypoint script 
+COPY scripts/test.sh /usr/local/bin/test.sh
+RUN chmod +x /usr/local/bin/test.sh 
+
