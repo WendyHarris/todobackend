@@ -21,3 +21,11 @@ VOLUME /reports
 COPY scripts/test.sh /usr/local/bin/test.sh
 RUN chmod +x /usr/local/bin/test.sh 
 
+#Set defaults for entrypoint and command string 
+ENTRYPOINT ["test.sh"] 
+CMD ["python", "manage.py", "test", "--noinput"] 
+
+COPY src /application 
+WORKDIR /application 
+
+
